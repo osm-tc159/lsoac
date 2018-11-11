@@ -1,0 +1,35 @@
+#!/usr/bin/perl
+#
+# Copyright (c) 2018 sasairc
+# Released under the MIT license.
+# see https://github.com/sasairc/lsoac/blob/master/LICENSE
+#
+
+use strict;
+use warnings;
+use utf8;
+use JSON;
+use LWP::UserAgent;
+
+my $url = "https://script.google.com/macros/s/AKfycbzNeGkemsTOvDs80HnIvNRx_PYq9Sh58BA9dSur_iLbjZNTVuY/exec";
+
+sub main() {
+    my ($ua, $res, $data, @data_arr);
+
+    $ua = LWP::UserAgent->new;
+    $res = $ua->get($url, "accept" => "application/json");
+    $data = JSON->new()->utf8(0)->decode($res->content);
+    @data_arr = @{$data->{posts}};
+    foreach (@data_arr) {
+        if ($_->{url}) {
+            print "day: $_->{day}\n";
+            print "author: $_->{author}\n";
+            print "title: $_->{title}\n";
+            print "url: $_->{url}\n";
+        }
+    }
+
+    return 0;
+}
+
+main();
